@@ -5,6 +5,7 @@ LocalStrategy = require('passport-local');
 const Users = require('../models/user'),
 logger = require('../config/winston');
 
+module.exports = function(passport) {
 //passport session setup
 passport.serializeUser((user, done) => {
     done(null, user._id);
@@ -21,7 +22,7 @@ passport.use('local-signup', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
-}, (email, password, done) => {
+}, (req, email, password, done) => {
     Users.findOne({ email: email})
     .then(user => {
         if(user) {
@@ -30,7 +31,7 @@ passport.use('local-signup', new LocalStrategy({
             let newUser = new Users();
             newUser.email = email;
             newUser.password = password;
-            Users.createUser(newUser, (err) => {
+            newUser.createUser(newUser, (err) => {
                 if(err) {
                     logger.info({ message: err.message});
                     return done(null, false, {errors: err});
@@ -42,15 +43,21 @@ passport.use('local-signup', new LocalStrategy({
 }))
 
 //LOCAL LOGIN
-passport.use(new LocalStrategy({
-    usernameField: 'user[email]',
-    passwordField: 'user[password]'
-}, (email, password, done) => {
+passport.use('local-login', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+}, (req, email, password, done) => {
     Users.findOne({email: email})
     .then(user => {
         if(!user || !user.validatePassword(password)) {
             return done(null, false, {errors: {'email or password': 'is invalid'}});
         }
         return done(null, user);
-    }).catch(done);
+    }).catch(err => {
+        console.log(err);
+        done(null, false, {errors: {'err': 'meh'}})
+    });
 }))
+
+}

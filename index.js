@@ -1,6 +1,7 @@
 const express = require('express'),
 app = express(),
 uuid = require('uuid/v4'),
+errorhandler = require('errorhandler'),
 cors = require('cors'),
 helmet = require('helmet'),
 path = require('path'),
@@ -13,12 +14,13 @@ passport = require('passport');
 
 const logger = require('./config/winston'),
 config = require('./config/config'),
+apiRouter = require('./routes/auth'),
 port = process.env.PORT || 8080,
 User = require('./models/user');
 
 isProduction = false;
 
-require('./config/passport');
+require('./config/passport')(passport);
 
 // BodyParser Middleware
 app.use(bodyParser.json());
@@ -49,16 +51,7 @@ app.use(passport.session());
 
 //Error Handlers & Middleware
 if(!isProduction) {
-    app.use((err, req, res) => {
-        res.status(err.status || 500);
-
-        res.json({
-            errors: {
-                message: err.message,
-                error: err
-            }
-        });
-    });
+    //app.use(errorhandler);
 }
 
 //Connect to MongoDB
@@ -72,7 +65,7 @@ try {
 }
 
 //Routes
-//app.use()
+app.use('/api', apiRouter);
 
 app.listen(port, () => {
     console.log('http://localhost:' + port + "\n" + isProduction + "\n" + config.mongoLocal);

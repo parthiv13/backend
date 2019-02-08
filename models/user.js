@@ -18,10 +18,7 @@ var UserSchema = mongoose.Schema({
 });
 
 UserSchema.methods.validatePassword = function(password) {
-    bcrypt.compare(password, this.password)
-    .then(res => {
-        return res;
-    });
+    return bcrypt.compareSync(password, this.password);
 }
 
 UserSchema.methods.createUser = function(newUser, cb) {
