@@ -27,7 +27,7 @@ router.post('/signup', (req, res, next) => {
         if(user) {
             res.send(info);
         }
-        if(!user) res.send(info)
+        if(!user) res.send(user)
     })(req, res, next)
 })
 
