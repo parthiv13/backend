@@ -50,14 +50,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Error Handlers & Middleware
-if(!isProduction) {
-    //app.use(errorhandler);
-}
+app.use(errorhandler);
+
 
 //Connect to MongoDB
 try {
     mongoose.set('useCreateIndex', true);
-    mongoose.connect(config.mongoLocal, {
+    mongoose.connect(config.mongoLab, {
         useNewUrlParser: true
     })
 } catch(error) {
