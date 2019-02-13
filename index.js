@@ -18,8 +18,6 @@ apiRouter = require('./routes/auth'),
 port = process.env.PORT || 8080,
 User = require('./models/user');
 
-isProduction = false;
-
 require('./config/passport')(passport);
 
 // BodyParser Middleware
@@ -31,7 +29,7 @@ app.use(morgan('dev', { "stream": logger.stream }));
 
 //CORS & helmet MiddleWare
 app.use(cors());
-app.use(helmet());
+//app.use(helmet());
 
 //Express-session Middleware
 app.use(session({
@@ -50,8 +48,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Error Handlers & Middleware
-app.use(errorhandler);
-
+//app.use(errorhandler);
 
 //Connect to MongoDB
 try {
@@ -59,6 +56,7 @@ try {
     mongoose.connect(config.mongoLab, {
         useNewUrlParser: true
     })
+    console.log('connected')
 } catch(error) {
     logger.info({ message: `${JSON.stringify(error)}`});
 }
@@ -70,6 +68,4 @@ app.get('/', (req, res) => {
     res.send('POST Methods only');
 })
 
-app.listen(port, () => {
-    console.log('http://localhost:' + port + "\n" + isProduction + "\n" + config.mongoLocal);
-})
+app.listen(port)
