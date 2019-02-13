@@ -17,10 +17,10 @@ const logger = winston.createLogger({
     transports: [
         new winston.transports.Console(options.console),
         //At Production Level
-        new winston.transports.File({
+        /*new winston.transports.File({
             filename: '../logs/error.log',
             level: 'error'
-        })
+        })*/
     ],
     exitOnError: false
 });
