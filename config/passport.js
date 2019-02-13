@@ -26,6 +26,7 @@ passport.use('local-signup', new LocalStrategy({
     Users.findOne({ email: email})
     .then(user => {
         if(user) {
+            console.log(user);
             return done(null, false, {errors: {'email': 'is taken'}});
         } else {
             let newUser = new Users();
@@ -33,7 +34,7 @@ passport.use('local-signup', new LocalStrategy({
             newUser.password = password;
             newUser.createUser(newUser, (err) => {
                 if(err) {
-                    logger.info({ message: err.message});
+                    logger.info({ message: err.message + 'wolwol'});
                     return done(null, false, {errors: err});
                 }
                 return done(null, newUser);
