@@ -67,6 +67,10 @@ try {
 //Routes
 app.use('/api', apiRouter);
 
+app.get('/', (req, res) => {
+    res.send('POST Methods only');
+})
+
 app.listen(port, () => {
     console.log('http://localhost:' + port + "\n" + isProduction + "\n" + config.mongoLocal);
 })
